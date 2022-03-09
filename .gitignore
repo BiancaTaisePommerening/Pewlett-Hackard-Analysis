@@ -1,8 +1,8 @@
 # adding a folder.
-
 practice
 
-
+# adding file
+.DS_Store 
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
