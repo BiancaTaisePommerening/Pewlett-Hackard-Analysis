@@ -47,13 +47,13 @@ SELECT * FROM retirement_info;
 
 
 -- Joining retirement_info and dept_emp tables
-SELECT retirement_info.emp_no,
-    retirement_info.first_name,
-	retirement_info.last_name,
-    dept_emp.to_date
-FROM retirement_info
-LEFT JOIN dept_emp
-ON retirement_info.emp_no = dept_emp.emp_no;
+-- SELECT retirement_info.emp_no,
+--     retirement_info.first_name,
+-- 	retirement_info.last_name,
+--     dept_emp.to_date
+-- FROM retirement_info
+-- LEFT JOIN dept_emp
+-- ON retirement_info.emp_no = dept_emp.emp_no;
 
 
 -- Joining retirement_info and dept_emp tables(with nicknames).
@@ -122,7 +122,9 @@ SELECT * FROM salaries
 ORDER BY to_date DESC;
 
 
--- create a inner join of 3 tables between employees table,
+-- create a list with employee information containing their unique employee number,
+-- their last name, first name, gender, and salary.
+--create inner join of 3 tables between employees table,
 --salaries table, and dept_emp, on emp_no column.
 SELECT e.emp_no,
 		e.first_name, 
@@ -139,11 +141,16 @@ ON (e.emp_no = de.emp_no)
 WHERE (e.birth_date BETWEEN '1952-01-01' AND '1955-12-31')
 AND (e.hire_date BETWEEN '1985-01-01' AND '1988-12-31')
 AND (de.to_date = '9999-01-01');
-
---display the table.
+--display the emp_info table.
 SELECT * FROM emp_info;
 
--- List of managers per department
+
+
+-- List of management information containing managers for each department, 
+-- including the department number, name, and the manager's employee number, 
+-- last name, first name, and the starting and ending employment dates
+-- create inner join of 3 tables between dept_manager table,
+--departments table, and current_employee table, on dpet_no column, and emp_no column.
 SELECT 	dm.dept_no,
 		d.dept_name,
 		dm.emp_no,
@@ -151,9 +158,64 @@ SELECT 	dm.dept_no,
 		ce.first_name,
 		dm.from_date,
 		dm.to_date
---INTO manager_info
+INTO manager_info
 FROM dept_manager as dm
 INNER JOIN departments as d
 ON (dm.dept_no = d.dept_no)
 INNER JOIN current_emp as ce 
-ON (dm.emp_no = ce.emp_no)
+ON (dm.emp_no = ce.emp_no);
+--display the manager_info table.
+SELECT * FROM manager_info;
+
+
+
+-- list of department retirees
+-- An updated current_emp list that includes everything it currently has,
+-- but also the employee's departments.
+SELECT  ce.emp_no,
+		ce.first_name,
+		ce.last_name,
+		d.dept_name
+INTO dept_info
+FROM current_emp as ce
+INNER JOIN dept_emp as de
+ON (ce.emp_no = de.emp_no)
+INNER JOIN departments as d
+ON (de.dept_no = d.dept_no);
+-- display the dept_info table.
+-- create inner join of 3 tables
+SELECT * FROM dept_info;
+
+-- skill drill 
+-- create a table of retirees for only the sales department.
+SELECT ri.emp_no,
+    ri.first_name,
+	ri.last_name,
+    d.dept_name
+INTO sales_dept_info
+FROM retirement_info as ri
+INNER JOIN dept_emp as de
+ON ri.emp_no = de.emp_no
+INNER JOIN departments as d
+ON (de.dept_no = d.dept_no)
+WHERE d.dept_name = ('Sales');
+-- display sales info
+SELECT * FROM sales_dept_info;
+
+-- skill drill 
+-- create a table of retirees of the sales and development departments.
+SELECT ri.emp_no,
+    ri.first_name,
+	ri.last_name,
+    d.dept_name
+INTO sales_develp_retirees
+FROM retirement_info as ri
+INNER JOIN dept_emp as de
+ON ri.emp_no = de.emp_no
+INNER JOIN departments as d
+ON (de.dept_no = d.dept_no)
+WHERE d.dept_name IN ('Sales', 'Development')
+ORDER BY dept_name ASC;
+-- display sales and development retirees info.
+SELECT * FROM sales_develp_retirees;
+
