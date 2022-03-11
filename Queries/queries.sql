@@ -45,18 +45,7 @@ AND (hire_date BETWEEN '1985-01-01' AND '1988-12-31');
 -- Check the table
 SELECT * FROM retirement_info;
 
-
--- Joining retirement_info and dept_emp tables
--- SELECT retirement_info.emp_no,
---     retirement_info.first_name,
--- 	retirement_info.last_name,
---     dept_emp.to_date
--- FROM retirement_info
--- LEFT JOIN dept_emp
--- ON retirement_info.emp_no = dept_emp.emp_no;
-
-
--- Joining retirement_info and dept_emp tables(with nicknames).
+-- Joining retirement_info and dept_emp tables.
 SELECT ri.emp_no,
     ri.first_name,
 	ri.last_name,
@@ -90,7 +79,7 @@ SELECT ri.emp_no,
     ri.first_name,
     ri.last_name,
 	de.to_date
---- create a new table to hold the information. Let's name it "current_emp."
+--- create a new table to hold the information.
 INTO current_emp
 --- add the code that will join these two tables.
 FROM retirement_info as ri
@@ -183,39 +172,73 @@ ON (ce.emp_no = de.emp_no)
 INNER JOIN departments as d
 ON (de.dept_no = d.dept_no);
 -- display the dept_info table.
--- create inner join of 3 tables
 SELECT * FROM dept_info;
 
--- skill drill 
--- create a table of retirees for only the sales department.
-SELECT ri.emp_no,
-    ri.first_name,
-	ri.last_name,
-    d.dept_name
-INTO sales_dept_info
-FROM retirement_info as ri
-INNER JOIN dept_emp as de
-ON ri.emp_no = de.emp_no
-INNER JOIN departments as d
-ON (de.dept_no = d.dept_no)
-WHERE d.dept_name = ('Sales');
--- display sales info
-SELECT * FROM sales_dept_info;
 
--- skill drill 
--- create a table of retirees of the sales and development departments.
-SELECT ri.emp_no,
-    ri.first_name,
-	ri.last_name,
-    d.dept_name
-INTO sales_develp_retirees
+-- Skill drill 1
+-- create a table of retirees for only the sales department.
+SELECT DISTINCT ON (ri.emp_no)
+		ri.emp_no,
+ 		ri.first_name,
+		ri.last_name,
+   		 d.dept_name,
+		 tt.title
+INTO sales_retirees
 FROM retirement_info as ri
 INNER JOIN dept_emp as de
-ON ri.emp_no = de.emp_no
+ON (ri.emp_no = de.emp_no)
+INNER JOIN titles as tt
+ON (ri.emp_no = tt.emp_no)
 INNER JOIN departments as d
 ON (de.dept_no = d.dept_no)
-WHERE d.dept_name IN ('Sales', 'Development')
-ORDER BY dept_name ASC;
+WHERE d.dept_name IN ('Sales') AND de.to_date = ('9999-01-01')
+ORDER BY ri.emp_no ASC, tt.title DESC;
+-- display sales retirees info.
+SELECT * FROM sales_retirees;
+
+
+-- create a table of retirees of development department.
+SELECT DISTINCT ON (ri.emp_no)
+		ri.emp_no,
+ 		ri.first_name,
+		ri.last_name,
+   		 d.dept_name,
+		 tt.title
+INTO develop_retirees
+FROM retirement_info as ri
+INNER JOIN dept_emp as de
+ON (ri.emp_no = de.emp_no)
+INNER JOIN titles as tt
+ON (ri.emp_no = tt.emp_no)
+INNER JOIN departments as d
+ON (de.dept_no = d.dept_no)
+WHERE d.dept_name IN ('Development') AND de.to_date = ('9999-01-01')
+ORDER BY ri.emp_no ASC, tt.title DESC;
+-- display development retirees info.
+SELECT * FROM develop_retirees;
+
+
+
+-- skill drill 2
+-- create a table of retirees of the sales and development departments.
+SELECT DISTINCT ON (ri.emp_no)
+		ri.emp_no,
+ 		ri.first_name,
+		ri.last_name,
+   		 d.dept_name,
+		 tt.title
+INTO sales_develop_retirees
+FROM retirement_info as ri
+INNER JOIN dept_emp as de
+ON (ri.emp_no = de.emp_no)
+INNER JOIN titles as tt
+ON (ri.emp_no = tt.emp_no)
+INNER JOIN departments as d
+ON (de.dept_no = d.dept_no)
+WHERE d.dept_name IN ('Sales', 'Development') AND de.to_date = ('9999-01-01')
+ORDER BY ri.emp_no ASC, tt.title DESC;
 -- display sales and development retirees info.
-SELECT * FROM sales_develp_retirees;
+SELECT * FROM sales_develop_retirees;
+
+
 
