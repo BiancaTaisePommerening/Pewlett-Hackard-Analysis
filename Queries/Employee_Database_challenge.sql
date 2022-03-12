@@ -121,13 +121,13 @@ SELECT  urt.title AS "Job Title",
 		met.count AS "Total Eligible p/ Title",
 		urt.count AS "Total Retiring p/ Title",
 		urt.count / met.count AS "Retir. p/ Elig. by Title."
-INTO retir_per_elig_by_dept
+INTO retir_per_elig_by_title
 FROM unique_retiring_titles AS urt
 FULL JOIN mentor_elig_by_title AS met
 ON (urt.title = met.title)
 ORDER BY urt.title ASC;
 		
-SELECT * FROM retir_per_elig_by_dept;
+SELECT * FROM retir_per_elig_by_title;
 
 --------------------------------------------------------------------
 
