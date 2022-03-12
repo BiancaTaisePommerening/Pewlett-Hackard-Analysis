@@ -1,15 +1,28 @@
--- create a table to hold the employee number, first and last name.
-SELECT emp_no, first_name, last_name
-INTO emp_data
-FROM employees;
 
--- create a table to hold the titles and dates. 
-SELECT title, from_date, to_date
-INTO title_data
-FROM titles;
+-- Total Amount of Current Employees working in the company.
+SELECT 	e.emp_no,
+		e.first_name,
+		e.last_name,
+		e.birth_date,
+		de.from_date,
+		de.to_date,
+		t.title
+INTO total_current_employees
+FROM employees AS e
+INNER JOIN dept_emp AS de
+ON e.emp_no = de.emp_no
+INNER JOIN titles AS t
+ON e.emp_no = t.emp_no
+WHERE de.to_date = ('9999-01-01')
+ORDER BY e.emp_no ASC;
+SELECT * FROM total_current_employees;
 
+SELECT COUNT(*) AS "Amount of Current Employees"
+FROM total_current_employees;
 
--- create a join of two tables (emp_data and title_data) into retir_titles
+--------------------------------------------------
+
+-- create a join of two tables into retir_titles.
 SELECT  e.emp_no,
 		e.first_name,
 		e.last_name,
@@ -25,8 +38,14 @@ ORDER BY emp_no ASC;
 
 SELECT * FROM retir_titles;
 
+SELECT COUNT(*) AS "Retiring Titles"
+FROM retir_titles;
 
--- create unique titles table.
+
+--------------------------------------
+
+
+-- Amount of Retiring Employees.
 -- Use Dictinct with Order by to remove duplicate rows
 SELECT DISTINCT ON (rt.emp_no)
 					rt.emp_no,
@@ -34,33 +53,38 @@ SELECT DISTINCT ON (rt.emp_no)
 					rt.last_name,
 					rt.title
 INTO unique_titles
-FROM retir_titles as rt
+FROM retir_titles AS rt
 WHERE rt.to_date = ('9999-01-01')
-ORDER BY rt.emp_no ASC, rt.title DESC;
-
+ORDER BY rt.emp_no ASC;		
+										
 SELECT * FROM unique_titles;
 
+SELECT COUNT(*) AS "Amount of Retiring Employees"
+FROM unique_titles;
 
--- create a Retiring Titles table to hold the required information.
--- retrieve the number of titles from the Unique Titles table.
--- Group the table by title, then sort the count column in descending order.
-SELECT COUNT(ut.title), ut.title
+------------------------------------
+
+-- Amount of Retiring Employees per Title.
+SELECT COUNT(ut.title), 
+			ut.title
 INTO unique_retiring_titles
-FROM unique_titles as ut
+FROM unique_titles AS ut
 GROUP BY ut.title
 ORDER BY ut.count DESC;
 
 SELECT * FROM unique_retiring_titles;
 
--- create a Mentorship Eligibility table that holds the employees who are eligible
--- to participate in a mentorship program.
+
+------------------------------------
+
+-- Amount of Employees Eligible for Mentorship program.
 SELECT DISTINCT ON  (e.emp_no) e.emp_no,
-					e.first_name,
-					e.last_name,
-					e.birth_date,
-					de.from_date,
-					de.to_date,
-					t.title
+					 e.first_name,
+					 e.last_name,
+					 e.birth_date,
+					 de.from_date,
+					 de.to_date,
+					 t.title
 INTO mentorship_eligibility
 FROM employees AS e
 INNER JOIN dept_emp AS de
@@ -70,5 +94,56 @@ ON (e.emp_no = t.emp_no)
 WHERE de.to_date = ('9999-01-01')
 AND (e.birth_date BETWEEN '1965-01-01' AND '1965-12-31')
 ORDER BY emp_no ASC;
-
 SELECT * FROM mentorship_eligibility;
+
+SELECT COUNT(*) AS "Mentorship Eligibility"
+FROM mentorship_eligibility;
+
+
+
+--------------------------------------------------------------------------------
+
+
+-- Amount of Employees Eligible for Mentorship Program per Title .
+SELECT COUNT(me.title),
+			 me.title
+INTO mentor_elig_by_title
+FROM mentorship_eligibility AS me
+GROUP BY me.title
+ORDER BY me.count DESC;
+
+SELECT * FROM mentor_elig_by_title;
+
+-----------------------------------------------
+
+--- Amount of Retiring Employees per Amount of Eligible Employees by Title.
+SELECT  urt.title AS "Job Title",
+		met.count AS "Total Eligible p/ Title",
+		urt.count AS "Total Retiring p/ Title",
+		urt.count / met.count AS "Retir. p/ Elig. by Title."
+INTO retir_per_elig_by_dept
+FROM unique_retiring_titles AS urt
+FULL JOIN mentor_elig_by_title AS met
+ON (urt.title = met.title)
+ORDER BY urt.title ASC;
+		
+SELECT * FROM retir_per_elig_by_dept;
+
+--------------------------------------------------------------------
+
+-- Checking if there are any youger employees than the ones born in 1965.
+
+SELECT e.emp_no,
+		e.birth_date,
+		de.to_date
+FROM employees AS e
+INNER JOIN dept_emp AS de
+ON e.emp_no = de.emp_no
+WHERE de.to_date = ('9999-01-01')
+AND e.birth_date BETWEEN '1966-01-01' AND '2004-12-31';
+
+
+
+
+
+
