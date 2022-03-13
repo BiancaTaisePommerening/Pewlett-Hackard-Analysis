@@ -11,7 +11,7 @@ Pewlett Hackard is a large company with thousand of employees. This company is i
 
 ### Total Amount of Current Employees
 
-The image bellow represent the total amount of employees that are currently working in the company which is 240,124.
+- The image bellow represent the total amount of employees that are currently working in the company which is 240,124.
 In order to get to this amount it was necessary to filter the to_date column by '9999-01-01', which is the date used for when an employee is still working in the company.
 This data can also be found on the Data folder as Pewlett-Hackard-Analysis/Data/total_current_employees.csv
 
@@ -19,12 +19,18 @@ This data can also be found on the Data folder as Pewlett-Hackard-Analysis/Data/
 
 
 
+### First Result of Retiring Employees
 
-### Total Amount of Retiring Employees
+- The first result of the amount of retiring employees was achieved by filtering the employees by the birth date range between '1952-01-01' and '1955-12-31'. Which resulted in 133,776 employees representing 55.7% of the total amount of current employees.
 
-- In order to get the total amount of retiring employees, different tables were joined together, then a filter on the birth_date was applied to get only employees that were born between '1952-01-01' and '1955-12-31'. The result was 72,458 as can be seen bellow. 
+![retirement_titles](./Resources/retirement_titles.png)
 
-This data can also be found on the Data folder as Pewlett-Hackard-Analysis/Data/retirement_titles.csv
+### Final Amount of Retiring Employees
+
+-  The further analysis of the last query, which included looking at the csv file with the resulted data led to the conclusion that the the data was having duplicate entries on the employee number (emp_no), which led then to understanding why that was happening. And the reason for that was that these duplicates entries were there because employees have changed roles throughout the years, so every time that happened a new entry was registered in the database. So in order to fix final result, the last query was modified to also add the filter on the to_date column, since that would bring back not only the current employees working for the company but also only the data entry from the job title that is still active.
+The final result was 72,458 as can be seen bellow. 
+
+This data can also be found on the Data folder as Pewlett-Hackard-Analysis/Data/unique_titles.csv
 
 ![unique_titles](./Resources/unique_titles.png)
 
@@ -37,7 +43,7 @@ To obtain the following table, the COUNT and GROUP BY methods were applied on th
 
 This data can also be found on the Data folder as Pewlett-Hackard-Analysis/Data/retiring_titles.csv
 
-![unique_retiring_titles](./Resources/unique_retiring_titles.png)
+![retiring_titles](./Resources/retiring_titles.png)
 
 
 
@@ -55,7 +61,7 @@ This data can also be found on the Data folder as Pewlett-Hackard-Analysis/Data/
 ### Total Amount of Employees Eligible for Mentorship Program by Title
 
 - Below we can see the amount of eligible employee split by their titles. Staff and Senior Engineer are the ones with highest amount of potential substitutes.  
-The table was obtained by applying the COUNT method and the GROUP BY method on the title column, using the total amount of eligible employees for the mentorship program as the reference. 
+The table was obtained by applying the COUNT  and GROUP BY methods on the title column, using the total amount of eligible employees for the mentorship program as the reference. 
 
 This data can also be found on the Data folder as Pewlett-Hackard-Analysis/Data/mentor_elig_by_title.csv
 
@@ -65,8 +71,7 @@ This data can also be found on the Data folder as Pewlett-Hackard-Analysis/Data/
 
 ### Average of Retiring per Eligible Employees by Title
 
-- The image below shows the code used and table resulting from it. On this joined table, we can see the total amount of retiring employees per title, amount of mentorship eligible employees per title and the average of eligible mentors per retiring employees by each job title. There are two 'null' values on the Manager title row, the reason for that is: there is mentorship eligible manager.
-
+- The image below shows the code used and table resulting from it. On this joined table, we can see the total amount of retiring employees per title, amount of mentorship eligible employees per title and the average of eligible mentors per retiring employees by each job title. There are two 'null' values on the Manager title row, the reason for that is: there aren't any eligible managers to be mentors.
 This data can also be found on the Data folder as Pewlett-Hackard-Analysis/Data/retir_per_elig_by_title.csv
 
 ![avg_by_title](./Resources/avg_by_title.png)
@@ -81,7 +86,7 @@ This data can also be found on the Data folder as Pewlett-Hackard-Analysis/Data/
 
 - Another point that the analysis shows is that there will not be any qualified Managers to take over the 2 upcoming positions.
 
-- After querying and analyzing the results I was able to find out that the younger generation working in the company is in fact born in 1965, which eliminates the option to change the criteria utilized to get even more younger people to be eligible for mentorship. The following image shows the query to check if there were any current employees born after 1965:
+- After querying and analyzing the results it was able to find out that the younger generation working in the company is in fact born in 1965, which eliminates the interesting option of expanding the current criteria of getting only people born in 1965 to add people even younger than that age to be eligible for mentorship. The following image shows the query to check if there were any current employees born after 1965:
 
 
 
@@ -89,6 +94,7 @@ This data can also be found on the Data folder as Pewlett-Hackard-Analysis/Data/
 
 
 - Now that the company knows the numbers and have a better idea of the proportion of the upcoming impact, in addition to the mentorship program, an option would be to start opening internship and trainee positions to hire and train new people before the impact takes place.
+
 
 
 

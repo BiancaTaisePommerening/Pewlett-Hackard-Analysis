@@ -29,17 +29,17 @@ SELECT  e.emp_no,
 		tl.title, 
 		tl.from_date,
 		tl.to_date
-INTO retir_titles
+INTO retirement_titles
 FROM employees as e
 INNER JOIN titles as tl
 ON (e.emp_no = tl.emp_no)
 WHERE (e.birth_date BETWEEN '1952-01-01' AND '1955-12-31')
 ORDER BY emp_no ASC;
 
-SELECT * FROM retir_titles;
+SELECT * FROM retirement_titles;
 
-SELECT COUNT(*) AS "Retiring Titles"
-FROM retir_titles;
+SELECT COUNT(*) AS "Retirement Titles"
+FROM retirement_titles;
 
 
 --------------------------------------
@@ -67,12 +67,12 @@ FROM unique_titles;
 -- Amount of Retiring Employees per Title.
 SELECT COUNT(ut.title), 
 			ut.title
-INTO unique_retiring_titles
+INTO retiring_titles
 FROM unique_titles AS ut
 GROUP BY ut.title
 ORDER BY ut.count DESC;
 
-SELECT * FROM unique_retiring_titles;
+SELECT * FROM retiring_titles;
 
 
 ------------------------------------
